@@ -14,7 +14,7 @@ and then:
 $ make docker-run:
 ```
 
-### SHUTDOWN ENVIRONMENT
+### POWER OFF ENVIRONMENT
 
 To stop your local environment
 ```sh
