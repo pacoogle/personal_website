@@ -11,7 +11,7 @@ $ make docker-build
 and then:
 
 ```sh
-$ make docker-run:
+$ make docker-run
 ```
 
 ### POWER OFF ENVIRONMENT
