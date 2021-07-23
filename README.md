@@ -1,6 +1,6 @@
 # My personal tailored, handmade website
 
-### POWER ON ENVIRONMENT
+### POWER-ON ENVIRONMENT
 
 To start locally project you have to open your terminal & digit these commands:
 
@@ -14,7 +14,7 @@ and then:
 $ make docker-run
 ```
 
-### POWER OFF ENVIRONMENT
+### POWER-OFF ENVIRONMENT
 
 To stop your local environment
 ```sh
