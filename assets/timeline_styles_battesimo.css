@@ -1,0 +1,36 @@
+body {
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 25%,
+    #c6d4c3 25%,
+    #c6d4c3 50%,
+    #ffffff 50%,
+    #ffffff 75%,
+    #c6d4c3 75%,
+    #c6d4c3 100%
+  );
+  background-size: 36px 36px;
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  min-height: 90%;
+  background: #f7f6f3;
+  min-width: 45%;
+}
+
+.border-personal {
+  border: 11px dotted #91c6d3;
+  outline-style: solid;
+  outline-color: #f7f6f3;
+  outline-width: 8px;
+  box-shadow: rgb(0 0 0 / 35%) 0px 0px 15px 17px;
+}
+
+.centered {
+  text-align: center;
+}
