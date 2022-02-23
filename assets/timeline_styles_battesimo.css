@@ -56,9 +56,9 @@ body {
     top: 48%;
     transform: translate(-50%, -50%);
     padding: 10px;
-    min-height: 33%;
+    max-height: 78% !important;
     background: #f7f6f3;
-    min-width: 86%;
+    min-width: 65%;
   }
 
   .border-custom {
