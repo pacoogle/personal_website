@@ -18,25 +18,25 @@ body {
 }
 
 .font-size-custom-20 {
-  font-size: 20px;
+  font-size: 18;
 }
 .font-size-custom-22 {
-  font-size: 22px;
+  font-size: 20px;
 }
 .font-size-custom-35 {
-  font-size: 35px;
+  font-size: 33px;
 }
 .font-size-custom-45 {
-  font-size: 45px;
+  font-size: 43px;
 }
 .font-size-custom-47 {
-  font-size: 47px;
+  font-size: 45px;
 }
 .font-size-custom-30 {
-  font-size: 30px;
+  font-size: 28px;
 }
 .font-size-custom-60 {
-  font-size: 60px;
+  font-size: 58px;
 }
 
 @media all and (max-width: 500px) {
