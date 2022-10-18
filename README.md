@@ -1,4 +1,4 @@
-# My personal tailored, handmade website
+# My personal tailored, handmade website.
 
 ### POWER-ON ENVIRONMENT
 
