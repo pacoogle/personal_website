@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   outputFileTracingRoot: __dirname,
+  /** Necessario per riferire file in public/ (avatar, PDF) in client component con basePath (GitHub Pages). */
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath || "",
+  },
   ...(basePath
     ? { basePath, assetPrefix: process.env.PAGES_ASSET_PREFIX || basePath }
     : {}),

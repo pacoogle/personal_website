@@ -25,6 +25,13 @@ import {
 } from "@/lib/cv";
 import type { TranscriptItem } from "@/lib/get-transcripts";
 
+const PUBLIC_BASE = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+function publicPath(href: string) {
+  const p = href.startsWith("/") ? href : `/${href}`;
+  return `${PUBLIC_BASE}${p}`;
+}
+
 const PLACEHOLDER =
   "Chiedimi quello che vuoi, riguardo a me o al mio lavoro o alla mia vita...";
 
@@ -271,7 +278,7 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             >
               <div className="mb-5 flex justify-center">
                 <Image
-                  src="/avatar.png"
+                  src={publicPath("/avatar.png")}
                   alt="Pasquale Ragozzino"
                   width={128}
                   height={128}
@@ -572,7 +579,7 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             >
               <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
                 <a
-                  href="/CV_PasqualeRagozzino_en.pdf"
+                  href={publicPath("/CV_PasqualeRagozzino_en.pdf")}
                   download
                   className="inline-flex w-fit shrink-0 text-sm font-medium text-accent underline-offset-4 transition hover:underline"
                 >
