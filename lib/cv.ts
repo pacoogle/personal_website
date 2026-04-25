@@ -18,9 +18,9 @@ const joinSearch = (parts: (string | string[])[]) =>
 export const executive = {
   title: "Sintesi",
   headline:
-    "CTO in Gamindo. 12 anni d’ingegneria. La priorità è l’impatto.",
+    "Aspirante ninja. Ingegnere informatico dal 2014. Papà innamorato della sua famiglia. La priorità è l’impatto.",
   subline:
-    "Strategia tecnologica, architetture solide, team che consegnano — dalle realtà in crescita alle scale-up, in Italia e oltre.",
+    "Strategia tecnologica, architetture solide, team che consegnano, dalle realtà in crescita alle scale-up, in Italia e oltre.",
   searchText: joinSearch([
     "sintesi",
     "executive",

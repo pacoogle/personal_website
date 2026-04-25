@@ -7,6 +7,7 @@ import {
   type Variants,
 } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
 import { SbobinaturaDetailView } from "@/components/SbobinaturaDetailView";
 import { TranscriptRow } from "@/components/TranscriptRow";
@@ -262,14 +263,27 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
       >
         <div className="mx-auto w-full max-w-2xl">
           {!unrolled && (
-            <motion.h1
+            <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="mb-10 text-center font-display text-3xl font-bold tracking-[-0.02em] text-charcoal antialiased md:text-4xl lg:text-5xl"
+              className="mb-10 flex flex-col items-center"
             >
-              Pasquale Ragozzino
-            </motion.h1>
+              <div className="mb-5 flex justify-center">
+                <Image
+                  src="/avatar.png"
+                  alt="Pasquale Ragozzino"
+                  width={128}
+                  height={128}
+                  className="h-28 w-28 rounded-full border-2 border-white object-cover shadow-md ring-2 ring-black/[0.08] md:h-32 md:w-32"
+                  priority
+                  sizes="128px"
+                />
+              </div>
+              <h1 className="text-center font-display text-3xl font-bold tracking-[-0.02em] text-charcoal antialiased md:text-4xl lg:text-5xl">
+                Pasquale Ragozzino
+              </h1>
+            </motion.div>
           )}
           <label className="sr-only" htmlFor="command-input">
             Riga di comando
@@ -552,18 +566,58 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
               </motion.section>
             )}
 
-            <motion.div
-              className="mx-auto max-w-2xl px-5 pb-32 pt-8"
+            <motion.footer
+              className="mx-auto max-w-2xl border-t border-black/6 px-5 pt-4 pb-6"
               variants={itemVariants}
             >
-              <a
-                href="/CV_PasqualeRagozzino_en.pdf"
-                download
-                className="inline-flex items-center text-sm font-medium text-accent underline-offset-4 transition hover:underline"
-              >
-                Scarica la documentazione (CV in PDF)
-              </a>
-            </motion.div>
+              <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+                <a
+                  href="/CV_PasqualeRagozzino_en.pdf"
+                  download
+                  className="inline-flex w-fit shrink-0 text-sm font-medium text-accent underline-offset-4 transition hover:underline"
+                >
+                  Scarica il mio CV in PDF
+                </a>
+                <nav
+                  className="flex min-w-0 flex-col gap-0.5 text-sm sm:max-w-[min(100%,20rem)] sm:items-end sm:text-right"
+                  aria-label="Contatti"
+                >
+                  <a
+                    href="mailto:pasquale.ragozzino89@gmail.com"
+                    className="group grid w-full max-w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-1.5 text-black/65 transition hover:text-accent sm:ml-auto sm:w-[min(100%,20rem)]"
+                  >
+                    <span className="min-w-0 break-all sm:text-right">
+                      pasquale.ragozzino89@gmail.com
+                    </span>
+                    <span className="inline-flex size-3.5 shrink-0 self-center text-black/40 transition group-hover:text-accent">
+                      <IconMail />
+                    </span>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/pasqualeragozzino/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex w-fit items-center justify-end gap-1.5 sm:ml-auto text-black/65 transition hover:text-accent"
+                  >
+                    <span>LinkedIn</span>
+                    <span className="inline-flex size-3.5 shrink-0 text-[#0A66C2] opacity-80 transition group-hover:opacity-100">
+                      <IconLinkedIn />
+                    </span>
+                  </a>
+                  <a
+                    href="https://github.com/pacoogle"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex w-fit items-center justify-end gap-1.5 sm:ml-auto text-black/65 transition hover:text-accent"
+                  >
+                    <span>GitHub</span>
+                    <span className="inline-flex size-3.5 shrink-0 text-charcoal/70 transition group-hover:text-charcoal">
+                      <IconGitHub />
+                    </span>
+                  </a>
+                </nav>
+              </div>
+            </motion.footer>
           </motion.div>
         )}
       </AnimatePresence>
@@ -633,5 +687,56 @@ function WorkCard({
         ))}
       </div>
     </motion.article>
+  );
+}
+
+function IconMail() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M3 7l9 6 9-6" />
+    </svg>
+  );
+}
+
+function IconLinkedIn() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+      aria-hidden
+    >
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
+
+function IconGitHub() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+      aria-hidden
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.86 8.16 6.84 9.5.5.1.66-.22.66-.48 0-.24-.01-.86-.01-1.7-2.78.6-3.36-1.33-3.36-1.33-.46-1.16-1.1-1.47-1.1-1.47-.9-.6.07-.6.07-.6.98.08 1.5 1.01 1.5 1.01.9 1.5 2.35 1.07 2.9.83.1-.64.35-1.08.64-1.32-2.22-.25-4.55-1.1-4.55-4.9 0-1.08.4-1.98 1.04-2.65-.1-.25-.45-1.3.1-2.7 0 0 .86-.28 2.8 1.01a9.4 9.4 0 0 1 2.5-.33c.85.01 1.7.11 2.5.33 1.95-1.3 2.8-1.01 2.8-1.01.55 1.4.2 2.45.1 2.7.64.68 1.04 1.57 1.04 2.65 0 3.8-2.35 4.64-4.6 4.9.35.3.7.9.7 1.8 0 1.3-.01 2.35-.01 2.68 0 .27.16.6.66.5A10.16 10.16 0 0 0 22 12c0-5.52-4.48-10-10-10z"
+      />
+    </svg>
   );
 }
