@@ -1,0 +1,53 @@
+# Hosting gratuito: GitHub Pages (static export Next.js → out/)
+# Abilita una volta: Settings → Pages → Build: GitHub Actions
+# URL tipico: https://<user>.github.io/<repo>/  → imposta in CI il secret PAGES_BASE_PATH=/<repo> (o variabile sotto, vedi next.config)
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+        env:
+          PAGES_BASE_PATH: ${{ secrets.PAGES_BASE_PATH }}
+          PAGES_ASSET_PREFIX: ${{ secrets.PAGES_ASSET_PREFIX }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        name: Pubblica su Pages
+        uses: actions/deploy-pages@v4
