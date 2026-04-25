@@ -1,1 +1,8 @@
 .idea/*
+.next
+out
+node_modules
+.env
+.env.local
+.venv
+*.log
