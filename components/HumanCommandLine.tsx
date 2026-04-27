@@ -9,6 +9,11 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  getCorpusTokens,
+  noResultSuggestions,
+  SEARCH_HINT_ID,
+} from "@/lib/search-suggestions";
 import { SbobinaturaDetailView } from "@/components/SbobinaturaDetailView";
 import { TranscriptRow } from "@/components/TranscriptRow";
 import {
@@ -33,7 +38,19 @@ function publicPath(href: string) {
 }
 
 const PLACEHOLDER =
-  "Chiedimi quello che vuoi, riguardo a me o al mio lavoro o alla mia vita...";
+  "Es. azienda, stack, valori, sbobinature, temi, nomi…";
+
+/**
+ * Esempi cliccabili: sintesi, tre aziende (searchText), sbobinature e valori.
+ */
+const EXAMPLE_SEARCH_TERMS = [
+  "sintesi",
+  "gamindo",
+  "supermoney",
+  "buzzoole",
+  "sbobinature",
+  "valori",
+] as const;
 
 const devSudoMessage =
   "Modello di permessi: fiducia. Hai trovato il percorso per sviluppatori — costruisco in trasparenza: contratti chiari, code review umane, sistemi comprensibili senza “root”. — P.";
@@ -250,6 +267,17 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
     [bParam, router, pathname, setUnrolled, setQuery, reduceMotion]
   );
 
+  const applySearchTerm = useCallback(
+    (term: string) => {
+      if (bParam) {
+        router.replace(pathname || "/");
+      }
+      setQuery(term);
+      setUnrolled(true);
+    },
+    [bParam, router, pathname, setQuery, setUnrolled]
+  );
+
   const noResults =
     unrolled &&
     q.length > 0 &&
@@ -258,6 +286,18 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
     !anyWorkVisible &&
     !anyTranscriptVisible &&
     !humanVisible;
+
+  const corpusTokens = useMemo(
+    () => getCorpusTokens(transcriptItems),
+    [transcriptItems]
+  );
+  const noMatchSuggestions = useMemo(
+    () =>
+      noResults
+        ? noResultSuggestions(query, corpusTokens, 10)
+        : [],
+    [noResults, query, corpusTokens]
+  );
 
   return (
     <div className="min-h-screen bg-white text-charcoal">
@@ -293,7 +333,7 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             </motion.div>
           )}
           <label className="sr-only" htmlFor="command-input">
-            Riga di comando
+            Cerca nel sito
           </label>
           <div className="flex items-center gap-2 sm:gap-3">
             <input
@@ -307,6 +347,7 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
               placeholder={PLACEHOLDER}
               className="min-w-0 flex-1 rounded-full border-0 bg-black/[0.04] px-6 py-4 text-base text-charcoal shadow-none outline-none ring-0 transition placeholder:text-black/35 focus:bg-black/[0.06] focus:ring-2 focus:ring-accent/30 md:text-lg"
               autoFocus
+              aria-describedby={SEARCH_HINT_ID}
             />
             {unrolled && (
               <button
@@ -323,8 +364,25 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             )}
           </div>
           <p
+            id={SEARCH_HINT_ID}
             className={
-              (unrolled ? "mt-2 " : "mt-3 ") +
+              (unrolled ? "mt-2.5 " : "mt-3 ") +
+              "mx-auto max-w-prose text-center text-[13px] leading-snug text-black/50 sm:text-sm"
+            }
+          >
+            {unrolled
+              ? "Una parola o una frase: restano le sezioni in cui quel testo compare (sintesi, lavori, valori, sbobinature). Invio mostra sotto l’esplorazione."
+              : "Cerca in sintesi, percorso lavorativo, valori o biblioteca: basta una parola, o ad es. un ruolo, un’azienda, uno stack, un tema o un nome. Invio apre l’esplorazione sotto la barra."}
+          </p>
+          <SearchTermChips
+            terms={EXAMPLE_SEARCH_TERMS}
+            onPick={applySearchTerm}
+            unrolled={unrolled}
+            ariaLabel="Esempi di termini da cercare"
+          />
+          <p
+            className={
+              (unrolled ? "mt-2.5 " : "mt-3 ") +
               "text-center font-mono text-[11px] text-black/40"
             }
           >
@@ -437,13 +495,44 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             )}
 
             {noResults && (
-              <motion.p
+              <motion.div
                 variants={itemVariants}
-                className="mb-8 font-mono text-sm text-black/50"
+                className="mb-10 rounded-2xl border border-black/8 bg-black/[0.02] px-4 py-4 sm:px-5"
+                role="status"
               >
-                Nessun risultato per «{query.trim()}». Prova un’azienda, uno
-                stack o un valore.
-              </motion.p>
+                <p className="font-mono text-sm text-black/55">
+                  Nessuna sezione contiene{" "}
+                  <span className="text-charcoal/90">«{query.trim()}»</span> nel
+                  testo usato per la ricerca.
+                </p>
+                {noMatchSuggestions.length > 0 && (
+                  <div className="mt-3">
+                    <p className="mb-2 text-[13px] text-black/45">
+                      In base a quello che hai scritto, prova:
+                    </p>
+                    <ul
+                      className="flex flex-wrap justify-center gap-2"
+                      aria-label="Suggerimenti collegati alla ricerca"
+                    >
+                      {noMatchSuggestions.map((t) => (
+                        <li key={t}>
+                          <button
+                            type="button"
+                            onClick={() => applySearchTerm(t)}
+                            className="rounded-full border border-black/10 bg-white px-3 py-1.5 text-center font-mono text-[12px] text-black/70 transition hover:border-accent/40 hover:bg-accent/[0.06] hover:text-charcoal"
+                          >
+                            {t}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <p className="mt-3 text-[12px] text-black/40">
+                  Oppure tocca un esempio sotto la barra, o usa &quot;Vai a&quot;
+                  per le sezioni fisse.
+                </p>
+              </motion.div>
             )}
 
             {execVisible && (
@@ -629,6 +718,40 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function SearchTermChips({
+  terms,
+  onPick,
+  unrolled,
+  ariaLabel,
+}: {
+  terms: readonly string[];
+  onPick: (term: string) => void;
+  unrolled: boolean;
+  ariaLabel: string;
+}) {
+  return (
+    <ul
+      className={
+        (unrolled ? "mt-2" : "mt-2.5") +
+        " flex flex-wrap items-center justify-center gap-2"
+      }
+      aria-label={ariaLabel}
+    >
+      {terms.map((t) => (
+        <li key={t}>
+          <button
+            type="button"
+            onClick={() => onPick(t)}
+            className="rounded-full border border-black/8 bg-white/80 px-2.5 py-1 text-center font-mono text-[11px] text-black/60 shadow-sm transition hover:border-accent/35 hover:text-charcoal sm:text-[12px]"
+          >
+            {t}
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
 
