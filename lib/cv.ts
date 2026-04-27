@@ -287,18 +287,18 @@ export const systemConstants: { key: string; value: string; note?: string }[] = 
     note: "Faccio crescere i team: tirocinanti, neo-laureati e profili esperti con la stessa stima.",
   },
   {
-    key: "TREKKING",
-    value: "ricarica",
-    note: "Distanza su un sentiero, lucidità quando si torna alla scrivania.",
+    key: "TENNIS",
+    value: "competition_mode: on",
+    note: "Questo sport mi sta facendo scoprire l'essere `soli` e come, quasi tutto `dipende da me stesso`!",
   },
   {
     key: "COLLABORAZIONE",
     value: "agile_practitioner",
-    note: "Sprint, retro e dialogo continuo con il prodotto.",
+    note: "Sprint, retro e dialogo continuo con gli stakeholder di business.",
   },
   {
     key: "CURIOSITÀ",
-    value: "read_eval_print_loop",
+    value: "read->eval->print->loop",
     note: "Da Swift 2 a GenAI: non fermarsi alla prima astrazione.",
   },
 ];

@@ -496,7 +496,7 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
                 className="mb-20 scroll-mt-28"
               >
                 <h2 className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-black/40">
-                  Logica umana
+                  Le mie costanti
                 </h2>
                 <p className="mb-8 text-sm text-black/50">
                   Costanti di sistema — ciò che resta vero tra un progetto e
