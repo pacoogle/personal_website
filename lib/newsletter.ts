@@ -15,13 +15,11 @@ const DEFAULT_TAG = "sbobinature";
 
 export type NewsletterSubscribeMode =
   | { kind: "none" }
-  | { kind: "form_post"; actionUrl: string; tag: string }
-  | { kind: "buttondown_page"; pageUrl: string };
+  | { kind: "form_post"; actionUrl: string; tag: string };
 
 /**
- * - `NEXT_PUBLIC_NEWSLETTER_FORM_ACTION`: POST su URL esterno (es. Mailchimp).
- * - `NEXT_PUBLIC_BUTTONDOWN_USERNAME`: link alla pagina iscrizione su buttondown.com
- *   (evita `blocked:origin` del POST embed da domini tipo GitHub Pages).
+ * POST verso form embed Buttondown o URL custom (Mailchimp, ecc.).
+ * Con username Buttondown: `https://buttondown.com/api/emails/embed-subscribe/{user}`.
  */
 export function getNewsletterSubscribeMode(): NewsletterSubscribeMode {
   const customAction = process.env.NEXT_PUBLIC_NEWSLETTER_FORM_ACTION?.trim();
@@ -33,8 +31,15 @@ export function getNewsletterSubscribeMode(): NewsletterSubscribeMode {
   if (!user) {
     return { kind: "none" };
   }
-  const encUser = encodeURIComponent(user);
-  const encTag = encodeURIComponent(tag);
-  const pageUrl = `https://buttondown.com/${encUser}?tag=${encTag}`;
-  return { kind: "buttondown_page", pageUrl };
+  const actionUrl = `https://buttondown.com/api/emails/embed-subscribe/${encodeURIComponent(user)}`;
+  return { kind: "form_post", actionUrl, tag };
+}
+
+/** Link “Powered by” / referral (solo flusso Buttondown da username). */
+export function getButtondownReferUrl(): string | null {
+  const customAction = process.env.NEXT_PUBLIC_NEWSLETTER_FORM_ACTION?.trim();
+  if (customAction) return null;
+  const user = process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME?.trim();
+  if (!user) return null;
+  return `https://buttondown.com/refer/${encodeURIComponent(user)}`;
 }

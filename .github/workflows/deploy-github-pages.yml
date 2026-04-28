@@ -1,6 +1,6 @@
 # Hosting gratuito: GitHub Pages (static export Next.js → out/)
 # Abilita una volta: Settings → Pages → Build: GitHub Actions
-# URL tipico: https://<user>.github.io/<repo>/  → imposta in CI il secret PAGES_BASE_PATH=/<repo> (o variabile sotto, vedi next.config)
+# URL tipico: https://<user>.github.io/<repo>/  → imposta il secret PAGES_BASE_PATH=/<repo>
 
 name: Deploy to GitHub Pages
 
@@ -36,9 +36,9 @@ jobs:
         env:
           PAGES_BASE_PATH: ${{ secrets.PAGES_BASE_PATH }}
           PAGES_ASSET_PREFIX: ${{ secrets.PAGES_ASSET_PREFIX }}
-          # Newsletter (stessi nomi dei repository secrets; NEXT_PUBLIC_* è iniettato al build)
           NEXT_PUBLIC_BUTTONDOWN_USERNAME: ${{ secrets.NEXT_PUBLIC_BUTTONDOWN_USERNAME }}
           NEXT_PUBLIC_NEWSLETTER_TAG: ${{ secrets.NEXT_PUBLIC_NEWSLETTER_TAG }}
+          NEXT_PUBLIC_NEWSLETTER_FORM_ACTION: ${{ secrets.NEXT_PUBLIC_NEWSLETTER_FORM_ACTION }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
