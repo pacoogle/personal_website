@@ -36,6 +36,9 @@ jobs:
         env:
           PAGES_BASE_PATH: ${{ secrets.PAGES_BASE_PATH }}
           PAGES_ASSET_PREFIX: ${{ secrets.PAGES_ASSET_PREFIX }}
+          # Newsletter (stessi nomi dei repository secrets; NEXT_PUBLIC_* è iniettato al build)
+          NEXT_PUBLIC_BUTTONDOWN_USERNAME: ${{ secrets.NEXT_PUBLIC_BUTTONDOWN_USERNAME }}
+          NEXT_PUBLIC_NEWSLETTER_TAG: ${{ secrets.NEXT_PUBLIC_NEWSLETTER_TAG }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
