@@ -2,6 +2,7 @@
 
 import type { TranscriptItem } from "@/lib/get-transcripts";
 import { TranscriptBodyMarkdown } from "@/components/TranscriptBodyMarkdown";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { motion } from "framer-motion";
 
 type Props = {
@@ -73,6 +74,7 @@ export function SbobinaturaDetailView({
         )}
       </header>
       <TranscriptBodyMarkdown source={item.body} />
+      <NewsletterSignup formIdSuffix={`detail-${item.slug}`} variant="compact" />
     </motion.article>
   );
 }

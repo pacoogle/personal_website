@@ -20,6 +20,7 @@ import {
   CommandQueryProvider,
   useCommandQuery,
 } from "@/components/CommandQueryContext";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import type { WorkBlock } from "@/lib/cv";
 import {
   executive,
@@ -636,15 +637,25 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
                     e note — per restituire in chiaro e riusabile le sessioni che
                     seguo.
                   </p>
-                  <p className="mb-10 max-w-prose text-sm text-black/50">
-                    <strong className="font-medium text-black/60">Clicca</strong>{" "}
+                  <p className="mb-3 max-w-prose text-sm leading-relaxed text-black/50">
+                    <strong className="font-bold text-black/60">Clicca</strong>{" "}
                     su un titolo per aprire la <strong className="font-medium text-black/60">scheda
-                    con la sbobinatura intera</strong> (mantiene la searchbar in
-                    alto). Sotto ogni riga, link diretti a YouTube o Spotify. Dalla
+                    con la sbobinatura intera</strong>. Sotto ogni riga, link diretti a YouTube o Spotify. Dalla
                     barra, <span className="text-black/60">Vai a → Sbobinature</span> o
                     cerca <span className="font-mono text-black/55">biblioteca
                     </span> / <span className="font-mono text-black/55">sbobinature</span>.
                   </p>
+                  <p className="mb-2 max-w-prose text-sm leading-relaxed text-black/50">
+                    <strong className="font-bold text-black/60">Newsletter</strong>:{" "}
+                    lasci l'email solo per sapere quando pubblico una nuova
+                    sbobinatura qui sotto, un'email per uscita, niente spam
+                    né altre comunicazioni dal sito (disiscrizione dal link in calce alle email).
+                  </p>
+                  <NewsletterSignup
+                    formIdSuffix="library"
+                    variant="footer"
+                    className="mb-10"
+                  />
                   <ul className="flex flex-col gap-10">
                     {transcriptItems.map((t) => (
                       <TranscriptRow
@@ -663,19 +674,26 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             )}
 
             <motion.footer
-              className="mx-auto max-w-2xl border-t border-black/6 px-5 pt-4 pb-6"
+              className="mx-auto max-w-2xl border-t border-black/6 px-5 pt-6 pb-8"
               variants={itemVariants}
             >
-              <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-                <a
-                  href={publicPath("/CV_PasqualeRagozzino_en.pdf")}
-                  download
-                  className="inline-flex w-fit shrink-0 text-sm font-medium text-accent underline-offset-4 transition hover:underline"
-                >
-                  Scarica il mio CV in PDF
-                </a>
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-x-10">
+                <div className="flex min-w-0 flex-col gap-5">
+                  <a
+                    href={publicPath("/CV_PasqualeRagozzino_en.pdf")}
+                    download
+                    className="inline-flex w-fit shrink-0 text-sm font-medium text-accent underline-offset-4 transition hover:underline"
+                  >
+                    Scarica il mio CV in PDF
+                  </a>
+                  <NewsletterSignup
+                    formIdSuffix="footer"
+                    variant="footer"
+                    className="w-full max-w-full"
+                  />
+                </div>
                 <nav
-                  className="flex min-w-0 flex-col gap-0.5 text-sm sm:max-w-[min(100%,20rem)] sm:items-end sm:text-right"
+                  className="flex min-w-0 flex-col gap-0.5 text-sm sm:w-[min(100%,20rem)] sm:items-end sm:justify-self-end sm:text-right"
                   aria-label="Contatti"
                 >
                   <a
