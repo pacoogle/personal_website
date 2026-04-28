@@ -647,8 +647,8 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
                   </p>
                   <p className="mb-2 max-w-prose text-sm leading-relaxed text-black/50">
                     <strong className="font-bold text-black/60">Newsletter</strong>:{" "}
-                    lasci l'email solo per sapere quando pubblico una nuova
-                    sbobinatura qui sotto, un'email per uscita, niente spam
+                    lasci l&apos;email solo per sapere quando pubblico una nuova
+                    sbobinatura qui sotto, un&apos;email per uscita, niente spam
                     né altre comunicazioni dal sito (disiscrizione dal link in calce alle email).
                   </p>
                   <NewsletterSignup
