@@ -77,7 +77,7 @@ export function NewsletterSignup({
   return (
     <section
       className={shellClass}
-      aria-labelledby={`newsletter-heading-${formIdSuffix}`}
+      aria-label="Iscrizione newsletter avvisi sbobinature"
     >
       {mode.kind === "form_post" ? (
         <iframe
@@ -89,24 +89,15 @@ export function NewsletterSignup({
         />
       ) : null}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
-        <h3
-          id={`newsletter-heading-${formIdSuffix}`}
-          className="shrink-0 text-[10px] font-medium uppercase tracking-[0.2em] text-black/40 sm:mt-2.5 sm:text-[11px]"
+      {mode.kind === "form_post" ? (
+        <form
+          method="post"
+          action={mode.actionUrl}
+          target={iframeName}
+          onSubmit={onSubmit}
+          noValidate
+          className="embeddable-buttondown-form min-w-0 w-full max-w-full space-y-2"
         >
-          Newsletter
-          <span className="sr-only"> sbobinature</span>
-        </h3>
-
-        {mode.kind === "form_post" ? (
-          <form
-            method="post"
-            action={mode.actionUrl}
-            target={iframeName}
-            onSubmit={onSubmit}
-            noValidate
-            className="embeddable-buttondown-form min-w-0 flex-1 space-y-2"
-          >
             <input type="hidden" name="tag" value={mode.tag} />
             <p id={descId} className="sr-only">
               Ricevi un avviso quando esce una nuova sbobinatura. Puoi
@@ -119,7 +110,7 @@ export function NewsletterSignup({
                   htmlFor={fieldId}
                   className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.18em] text-black/45"
                 >
-                  La tua email
+                  Newsletter Sbobinature
                 </label>
                 <input
                   type="email"
@@ -172,7 +163,6 @@ export function NewsletterSignup({
             <span aria-hidden>—</span>
           </p>
         )}
-      </div>
 
       {mode.kind === "form_post" && status === "success" ? (
         <p className="mt-2 text-sm text-accent" role="status">
