@@ -664,6 +664,7 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
                         speaker={t.speaker}
                         topic={t.topic}
                         searchText={t.searchText}
+                        isNew={t.isNew}
                         youtube={t.youtube}
                         spotify={t.spotify}
                       />

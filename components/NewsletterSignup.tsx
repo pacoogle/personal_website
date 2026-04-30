@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useId, useRef, useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import {
   getButtondownReferUrl,
   getNewsletterSubscribeMode,
   isValidNewsletterEmail,
 } from "@/lib/newsletter";
 
-type Status = "idle" | "loading" | "success" | "error";
+type Status = "idle" | "opened" | "error";
 
 type Props = {
   formIdSuffix?: string;
@@ -23,7 +23,6 @@ export function NewsletterSignup({
   const reactId = useId();
   const safeId = reactId.replace(/:/g, "");
   const fieldId = `bd-email-${formIdSuffix}-${safeId}`;
-  const iframeName = `newsletter-frame-${formIdSuffix}-${safeId}`;
   const descId = `newsletter-desc-${formIdSuffix}-${safeId}`;
 
   const mode = getNewsletterSubscribeMode();
@@ -31,15 +30,12 @@ export function NewsletterSignup({
 
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
-  const pendingSubmit = useRef(false);
 
-  const onIframeLoad = useCallback(() => {
-    if (!pendingSubmit.current) return;
-    pendingSubmit.current = false;
-    setStatus("success");
-    setEmail("");
-  }, []);
-
+  /**
+   * Buttondown risponde con una pagina Turnstile (anti-bot). In un iframe nascosto
+   * il widget fallisce spesso (es. messaggi tipo blocked:origin in console).
+   * target="_blank" apre la verifica in una scheda dedicata.
+   */
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     if (mode.kind !== "form_post") {
       e.preventDefault();
@@ -50,8 +46,7 @@ export function NewsletterSignup({
       setStatus("error");
       return;
     }
-    pendingSubmit.current = true;
-    setStatus("loading");
+    setStatus("opened");
   };
 
   const isCompact = variant === "compact";
@@ -80,20 +75,10 @@ export function NewsletterSignup({
       aria-label="Iscrizione newsletter avvisi sbobinature"
     >
       {mode.kind === "form_post" ? (
-        <iframe
-          name={iframeName}
-          title="Conferma iscrizione newsletter"
-          className="pointer-events-none absolute h-0 w-0 opacity-0"
-          aria-hidden
-          onLoad={onIframeLoad}
-        />
-      ) : null}
-
-      {mode.kind === "form_post" ? (
         <form
           method="post"
           action={mode.actionUrl}
-          target={iframeName}
+          target="_blank"
           onSubmit={onSubmit}
           noValidate
           className="embeddable-buttondown-form min-w-0 w-full max-w-full space-y-2"
@@ -125,18 +110,13 @@ export function NewsletterSignup({
                   onChange={(e) => {
                     setEmail(e.target.value);
                     if (status === "error") setStatus("idle");
-                    if (status === "success") setStatus("idle");
+                    if (status === "opened") setStatus("idle");
                   }}
-                  disabled={status === "loading"}
                   className={inputClass}
                 />
               </div>
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className={submitClass}
-              >
-                {status === "loading" ? "Invio…" : "Iscrivimi"}
+              <button type="submit" className={submitClass}>
+                Iscrivimi
               </button>
             </div>
 
@@ -164,10 +144,10 @@ export function NewsletterSignup({
           </p>
         )}
 
-      {mode.kind === "form_post" && status === "success" ? (
+      {mode.kind === "form_post" && status === "opened" ? (
         <p className="mt-2 text-sm text-accent" role="status">
-          Richiesta inviata. Controlla la posta per confermare l&apos;iscrizione,
-          se richiesto.
+          Si è aperta una nuova scheda: completa la verifica anti-spam e conferma
+          l&apos;iscrizione. Controlla anche la posta in arrivo.
         </p>
       ) : null}
       {mode.kind === "form_post" && status === "error" ? (

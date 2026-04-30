@@ -11,6 +11,7 @@ type Props = {
   speaker: string;
   topic: string;
   searchText: string;
+  isNew: boolean;
   youtube: string | null;
   spotify: string | null;
 };
@@ -20,6 +21,7 @@ export function TranscriptRow({
   speaker,
   topic,
   searchText,
+  isNew,
   youtube,
   spotify,
 }: Props) {
@@ -39,6 +41,11 @@ export function TranscriptRow({
           <span className="text-charcoal group-hover:text-accent group-hover:underline group-hover:decoration-accent/40">
             {speaker}
           </span>{" "}
+          {isNew && (
+            <span className="mr-1 inline-flex translate-y-[-1px] rounded-full border border-accent/20 bg-accent/5 px-1.5 py-px align-middle text-[9px] uppercase tracking-[0.12em] text-accent/75">
+              new
+            </span>
+          )}
           <span className="text-black/30">—</span> {topic}
         </p>
         <span className="mt-0.5 block text-[10px] font-mono text-black/30 transition group-hover:text-accent/80">

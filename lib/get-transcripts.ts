@@ -8,6 +8,7 @@ export type TranscriptItem = {
   topic: string;
   body: string;
   searchText: string;
+  isNew: boolean;
   /** URL video su YouTube (se presente) */
   youtube: string | null;
   /** URL episodio o clip su Spotify (se presente) */
@@ -29,6 +30,7 @@ export function getAllTranscriptItems(): TranscriptItem[] {
       const speaker = String(data.speaker ?? "Sconosciuto");
       const topic = String(data.topic ?? "Tema");
       const slug = file.replace(/\.mdx?$/, "");
+      const isNew = data.isNew === true;
       const youtube =
         data.youtube != null && String(data.youtube).trim() !== ""
           ? String(data.youtube).trim()
@@ -50,6 +52,7 @@ export function getAllTranscriptItems(): TranscriptItem[] {
         topic,
         body: content.trim(),
         searchText,
+        isNew,
         youtube,
         spotify,
       };
