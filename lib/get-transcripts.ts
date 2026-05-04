@@ -56,5 +56,6 @@ export function getAllTranscriptItems(): TranscriptItem[] {
         youtube,
         spotify,
       };
-    });
+    })
+    .sort((a, b) => Number(b.isNew) - Number(a.isNew));
 }
