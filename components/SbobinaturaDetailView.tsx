@@ -18,6 +18,7 @@ export function SbobinaturaDetailView({
 }: Props) {
   return (
     <motion.article
+      id={`sbobinatura-${item.slug}`}
       className="mx-auto max-w-2xl scroll-mt-28 px-5 pb-32 pt-4"
       initial={reduceMotion ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -39,39 +40,49 @@ export function SbobinaturaDetailView({
           <span className="text-black/30"> — </span>
           <span>{item.topic}</span>
         </h1>
-        {(item.youtube || item.spotify) && (
-          <p className="mt-4 flex flex-wrap items-center gap-3 text-[12px] font-mono text-black/45">
-            {item.youtube && (
-              <a
-                href={item.youtube}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent transition hover:underline"
-                aria-label="Apri il video su YouTube"
-                onClick={(e) => e.stopPropagation()}
-              >
-                YouTube
-              </a>
-            )}
-            {item.youtube && item.spotify && (
-              <span className="text-black/20" aria-hidden>
-                ·
-              </span>
-            )}
-            {item.spotify && (
-              <a
-                href={item.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent transition hover:underline"
-                aria-label="Apri l’episodio su Spotify"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Spotify
-              </a>
-            )}
-          </p>
-        )}
+        <p className="mt-4 flex flex-wrap items-center gap-3 text-[12px] font-mono text-black/45">
+          <a
+            href={`/?b=${encodeURIComponent(item.slug)}#sbobinatura-${item.slug}`}
+            className="text-accent transition hover:underline"
+            aria-label={`Link diretto alla sbobinatura di ${item.speaker}`}
+          >
+            Link diretto
+          </a>
+          {(item.youtube || item.spotify) && (
+            <span className="text-black/20" aria-hidden>
+              ·
+            </span>
+          )}
+          {item.youtube && (
+            <a
+              href={item.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent transition hover:underline"
+              aria-label="Apri il video su YouTube"
+              onClick={(e) => e.stopPropagation()}
+            >
+              YouTube
+            </a>
+          )}
+          {item.youtube && item.spotify && (
+            <span className="text-black/20" aria-hidden>
+              ·
+            </span>
+          )}
+          {item.spotify && (
+            <a
+              href={item.spotify}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent transition hover:underline"
+              aria-label="Apri l’episodio su Spotify"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Spotify
+            </a>
+          )}
+        </p>
       </header>
       <TranscriptBodyMarkdown source={item.body} />
       <NewsletterSignup formIdSuffix={`detail-${item.slug}`} variant="compact" />

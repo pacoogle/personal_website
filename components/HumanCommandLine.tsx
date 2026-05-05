@@ -99,6 +99,32 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
   const q = query.trim().toLowerCase();
   const sudoActive = q.includes("sudo");
 
+  useEffect(() => {
+    if (bParam) return;
+
+    const openTranscriptAnchor = () => {
+      const anchorId = window.location.hash.slice(1);
+      if (!anchorId.startsWith("sbobinatura-")) return;
+
+      setUnrolled(true);
+      setQuery("biblioteca");
+
+      const scrollToAnchor = () => {
+        document.getElementById(anchorId)?.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+      };
+
+      setTimeout(scrollToAnchor, 0);
+      setTimeout(scrollToAnchor, 120);
+    };
+
+    openTranscriptAnchor();
+    window.addEventListener("hashchange", openTranscriptAnchor);
+    return () => window.removeEventListener("hashchange", openTranscriptAnchor);
+  }, [bParam, reduceMotion, setQuery, setUnrolled]);
+
   const match = useCallback(
     (hay: string) => visibleWhenQuery(query, hay),
     [query]

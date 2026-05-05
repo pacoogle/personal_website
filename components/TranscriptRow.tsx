@@ -28,11 +28,13 @@ export function TranscriptRow({
   const match = useMatchQuery();
   const { setUnrolled } = useCommandQuery();
   const visible = match(searchText);
+  const anchorId = `sbobinatura-${slug}`;
+  const detailHref = `/?b=${encodeURIComponent(slug)}#${anchorId}`;
   if (!visible) return null;
   return (
-    <li id={`transcript-${slug}`} className="scroll-mt-28">
+    <li id={anchorId} className="scroll-mt-28">
       <Link
-        href={`/?b=${encodeURIComponent(slug)}`}
+        href={detailHref}
         scroll={true}
         onClick={() => setUnrolled(true)}
         className="group block w-full text-left"
@@ -59,10 +61,11 @@ export function TranscriptRow({
               href={youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent transition hover:underline"
+              className="inline-flex items-center gap-1.5 text-accent transition hover:underline"
               aria-label="Apri il video su YouTube"
               onClick={(e) => e.stopPropagation()}
             >
+              <IconYouTube />
               YouTube
             </a>
           )}
@@ -86,5 +89,18 @@ export function TranscriptRow({
         </p>
       )}
     </li>
+  );
+}
+
+function IconYouTube() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 24 24"
+      className="h-3.5 w-3.5 shrink-0"
+      fill="currentColor"
+    >
+      <path d="M21.58 7.19a2.48 2.48 0 0 0-1.75-1.75C18.28 5.02 12 5.02 12 5.02s-6.28 0-7.83.42a2.48 2.48 0 0 0-1.75 1.75A25.88 25.88 0 0 0 2 12a25.88 25.88 0 0 0 .42 4.81 2.48 2.48 0 0 0 1.75 1.75c1.55.42 7.83.42 7.83.42s6.28 0 7.83-.42a2.48 2.48 0 0 0 1.75-1.75A25.88 25.88 0 0 0 22 12a25.88 25.88 0 0 0-.42-4.81ZM10 14.98V9.02L15.2 12 10 14.98Z" />
+    </svg>
   );
 }
