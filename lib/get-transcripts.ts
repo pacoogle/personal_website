@@ -6,16 +6,53 @@ export type TranscriptItem = {
   slug: string;
   speaker: string;
   topic: string;
+  summary: string;
+  highlights: string[];
   body: string;
   searchText: string;
   isNew: boolean;
+  wordCount: number;
+  readingMinutes: number;
   /** URL video su YouTube (se presente) */
   youtube: string | null;
   /** URL episodio o clip su Spotify (se presente) */
   spotify: string | null;
+  /** Thumbnail YouTube derivata dall'URL (se presente) */
+  youtubeThumbnail: string | null;
 };
 
 const TRANSCRIPTS_DIR = path.join(process.cwd(), "content/transcripts");
+
+function extractSummary(content: string) {
+  const match = content.match(/^>\s+(.+)$/m);
+  if (!match) return "";
+  return match[1].trim();
+}
+
+function extractHighlights(content: string) {
+  return Array.from(
+    content.matchAll(/<span[^>]*class=["'][^"']*transcript-chip[^"']*["'][^>]*>(.*?)<\/span>/gi)
+  )
+    .map((m) => m[1].replace(/<[^>]+>/g, "").trim())
+    .filter(Boolean);
+}
+
+function stripText(content: string) {
+  return content
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[`*_#>-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getYouTubeThumbnail(url: string | null) {
+  if (!url) return null;
+  const id =
+    url.match(/youtu\.be\/([^?&/]+)/)?.[1] ??
+    url.match(/[?&]v=([^?&/]+)/)?.[1] ??
+    null;
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}
 
 export function getAllTranscriptItems(): TranscriptItem[] {
   if (!fs.existsSync(TRANSCRIPTS_DIR)) return [];
@@ -31,6 +68,11 @@ export function getAllTranscriptItems(): TranscriptItem[] {
       const topic = String(data.topic ?? "Tema");
       const slug = file.replace(/\.mdx?$/, "");
       const isNew = data.isNew === true;
+      const summary = extractSummary(content);
+      const highlights = extractHighlights(content);
+      const plainText = stripText(content);
+      const wordCount = plainText ? plainText.split(/\s+/).length : 0;
+      const readingMinutes = Math.max(1, Math.ceil(wordCount / 210));
       const youtube =
         data.youtube != null && String(data.youtube).trim() !== ""
           ? String(data.youtube).trim()
@@ -44,7 +86,7 @@ export function getAllTranscriptItems(): TranscriptItem[] {
         .join(" ")
         .toLowerCase()
         .concat(
-          " biblioteca sbobinature trascritti transcript library sbobinatura youtube spotify video podcast comunità community gratuito ai agente highlight"
+          " archivio biblioteca sbobinature trascritti transcript library sbobinatura youtube spotify video podcast comunità community gratuito ai agente highlight"
         );
       return {
         slug,
@@ -53,9 +95,18 @@ export function getAllTranscriptItems(): TranscriptItem[] {
         body: content.trim(),
         searchText,
         isNew,
+        summary,
+        highlights,
+        wordCount,
+        readingMinutes,
         youtube,
         spotify,
+        youtubeThumbnail: getYouTubeThumbnail(youtube),
       };
     })
     .sort((a, b) => Number(b.isNew) - Number(a.isNew));
+}
+
+export function getTranscriptBySlug(slug: string) {
+  return getAllTranscriptItems().find((item) => item.slug === slug);
 }

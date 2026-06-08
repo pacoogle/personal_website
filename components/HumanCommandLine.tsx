@@ -6,6 +6,7 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
@@ -450,14 +451,23 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             </nav>
           )}
           {!unrolled && hasLibrary && (
-            <p className="mt-5 text-center">
+            <p className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center font-mono text-[12px]">
               <button
                 type="button"
                 onClick={() => goToSection("library")}
-                className="font-mono text-[12px] text-accent/90 underline decoration-accent/30 underline-offset-4 transition hover:text-accent hover:decoration-accent/60"
+                className="text-accent/90 underline decoration-accent/30 underline-offset-4 transition hover:text-accent hover:decoration-accent/60"
               >
-                La biblioteca · Sbobinature
+                Anteprima sbobinature
               </button>
+              <span className="text-black/20" aria-hidden>
+                ·
+              </span>
+              <Link
+                href="/sbobinature"
+                className="text-accent/90 underline decoration-accent/30 underline-offset-4 transition hover:text-accent hover:decoration-accent/60"
+              >
+                Archivio dedicato
+              </Link>
             </p>
           )}
         </div>
@@ -642,41 +652,37 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
                 id="library"
                 aria-labelledby="library-heading"
                 variants={itemVariants}
-                className="scroll-mt-24 border-t border-black/8 bg-gradient-to-b from-black/[0.02] to-black/[0.04] py-20"
+                className="scroll-mt-24 border-t border-black/10 bg-[#fbfaf7] py-20"
               >
                 <div className="mx-auto max-w-2xl px-5">
                   <h2
                     id="library-heading"
-                    className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-black/40"
+                    className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-accent"
                   >
-                    La biblioteca · Sbobinature
+                    Sbobinature
                   </h2>
+                  <p className="mb-3 max-w-prose font-display text-2xl font-semibold leading-tight tracking-tight text-charcoal">
+                    Un archivio dedicato per trasformare conversazioni lunghe in
+                    conoscenza leggibile.
+                  </p>
                   <p className="mb-3 max-w-prose text-sm leading-relaxed text-black/60">
-                    Questo spazio raccoglie ciò che «sbobino» per rimetterlo alla
-                    community <strong className="font-medium text-charcoal">in
-                    modo gratuito</strong>: ogni scheda parte da un video{" "}
-                    <strong className="font-medium text-charcoal">YouTube</strong>{" "}
-                    o un episodio{" "}
-                    <strong className="font-medium text-charcoal">Spotify</strong>
-                    , poi con un <strong className="font-medium text-charcoal">
-                    agente AI</strong> lavoro trascrizioni, testo pulito, highlight
-                    e note — per restituire in chiaro e riusabile le sessioni che
-                    seguo.
+                    Ogni scheda parte da un video YouTube o da un episodio audio,
+                    poi viene ripulita, sintetizzata e resa consultabile con
+                    highlight, temi e link alla fonte. Qui sotto trovi
+                    l&apos;anteprima, mentre l&apos;archivio completo ha ricerca,
+                    permalink e pagine di lettura dedicate.
                   </p>
-                  <p className="mb-3 max-w-prose text-sm leading-relaxed text-black/50">
-                    <strong className="font-bold text-black/60">Clicca</strong>{" "}
-                    su un titolo per aprire la <strong className="font-medium text-black/60">scheda
-                    con la sbobinatura intera</strong>. Sotto ogni riga, link diretti a YouTube o Spotify. Dalla
-                    barra, <span className="text-black/60">Vai a → Sbobinature</span> o
-                    cerca <span className="font-mono text-black/55">biblioteca
-                    </span> / <span className="font-mono text-black/55">sbobinature</span>.
-                  </p>
-                  <p className="mb-2 max-w-prose text-sm leading-relaxed text-black/50">
-                    <strong className="font-bold text-black/60">Newsletter</strong>:{" "}
-                    inserisci l&apos;email nel modulo qui sotto: un avviso quando esce una
-                    nuova sbobinatura, niente spam (disiscrizione dal link in calce alle
-                    email). Il servizio iscrizioni è gestito da Buttondown.
-                  </p>
+                  <div className="mb-7 flex flex-wrap items-center gap-3">
+                    <Link
+                      href="/sbobinature"
+                      className="rounded-full bg-charcoal px-4 py-2 font-mono text-[12px] text-white transition hover:bg-accent"
+                    >
+                      Apri l&apos;archivio
+                    </Link>
+                    <span className="font-mono text-[11px] text-black/40">
+                      {transcriptItems.length} sbobinature pubblicate
+                    </span>
+                  </div>
                   <NewsletterSignup
                     formIdSuffix="library"
                     variant="footer"
