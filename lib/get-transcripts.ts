@@ -17,8 +17,6 @@ export type TranscriptItem = {
   youtube: string | null;
   /** URL episodio o clip su Spotify (se presente) */
   spotify: string | null;
-  /** Thumbnail YouTube derivata dall'URL (se presente) */
-  youtubeThumbnail: string | null;
 };
 
 const TRANSCRIPTS_DIR = path.join(process.cwd(), "content/transcripts");
@@ -43,15 +41,6 @@ function stripText(content: string) {
     .replace(/[`*_#>-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-}
-
-function getYouTubeThumbnail(url: string | null) {
-  if (!url) return null;
-  const id =
-    url.match(/youtu\.be\/([^?&/]+)/)?.[1] ??
-    url.match(/[?&]v=([^?&/]+)/)?.[1] ??
-    null;
-  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
 }
 
 export function getAllTranscriptItems(): TranscriptItem[] {
@@ -101,7 +90,6 @@ export function getAllTranscriptItems(): TranscriptItem[] {
         readingMinutes,
         youtube,
         spotify,
-        youtubeThumbnail: getYouTubeThumbnail(youtube),
       };
     })
     .sort((a, b) => Number(b.isNew) - Number(a.isNew));

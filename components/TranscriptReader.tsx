@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { TranscriptItem } from "@/lib/get-transcripts";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { TranscriptBodyMarkdown } from "@/components/TranscriptBodyMarkdown";
+import { TranscriptPreviewPoster } from "@/components/TranscriptPreviewPoster";
 
 type Props = {
   item: TranscriptItem;
@@ -78,17 +79,11 @@ export function TranscriptReader({ item }: Props) {
           </div>
         </header>
 
-        {item.youtubeThumbnail && (
-          <div className="mx-auto max-w-5xl px-5 pt-8 md:px-8">
-            <div className="overflow-hidden rounded-lg border border-black/10 bg-black">
-              <div
-                className="h-64 w-full bg-cover bg-center opacity-90 md:h-80"
-                style={{ backgroundImage: `url(${item.youtubeThumbnail})` }}
-                aria-hidden
-              />
-            </div>
+        <div className="mx-auto max-w-5xl px-5 pt-8 md:px-8">
+          <div className="overflow-hidden rounded-lg border border-black/10 bg-white shadow-sm">
+            <TranscriptPreviewPoster item={item} size="hero" />
           </div>
-        )}
+        </div>
 
         <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-24 pt-8 md:grid-cols-[minmax(0,42rem)_16rem] md:px-8 md:pt-10">
           <div className="min-w-0 rounded-lg border border-black/10 bg-white px-5 py-7 shadow-sm md:px-8 md:py-9">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { TranscriptItem } from "@/lib/get-transcripts";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { TranscriptPreviewPoster } from "@/components/TranscriptPreviewPoster";
 
 type Props = {
   items: TranscriptItem[];
@@ -44,7 +45,7 @@ export function TranscriptArchive({ items }: Props) {
               idee, passaggi chiave e connessioni tra tecnologia, impresa e AI.
             </p>
             <div className="mt-8 grid max-w-xl grid-cols-3 gap-px overflow-hidden rounded-lg border border-black/10 bg-black/10">
-              <Stat label="schede" value={items.length.toString()} />
+              <Stat label="sbobinature" value={items.length.toString()} />
               <Stat label="parole" value={formatCompact(totalWords)} />
               <Stat label="minuti" value={formatCompact(totalMinutes)} />
             </div>
@@ -116,25 +117,13 @@ export function TranscriptArchive({ items }: Props) {
 
 function TranscriptCard({ item }: { item: TranscriptItem }) {
   return (
-    <article className="grid overflow-hidden rounded-lg border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-md sm:grid-cols-[11rem_minmax(0,1fr)]">
+    <article className="grid overflow-hidden rounded-lg border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-md sm:grid-cols-[9.5rem_minmax(0,1fr)]">
       <Link
         href={`/sbobinature/${item.slug}`}
-        className="group relative block min-h-44 bg-black/[0.04] sm:min-h-full"
+        className="group relative block h-48 overflow-hidden bg-black/[0.04] sm:h-auto sm:min-h-full"
         aria-label={`Apri la sbobinatura di ${item.speaker}`}
       >
-        {item.youtubeThumbnail ? (
-          <span
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${item.youtubeThumbnail})` }}
-            aria-hidden
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[#e7f0ec]" aria-hidden />
-        )}
-        <span className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-        <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-black/65">
-          Leggi
-        </span>
+        <TranscriptPreviewPoster item={item} />
       </Link>
       <div className="flex min-w-0 flex-col p-5">
         <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-black/40">
