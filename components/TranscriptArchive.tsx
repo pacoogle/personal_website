@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { TranscriptItem } from "@/lib/get-transcripts";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
-import { TranscriptPreviewPoster } from "@/components/TranscriptPreviewPoster";
 
 type Props = {
   items: TranscriptItem[];
@@ -117,75 +116,66 @@ export function TranscriptArchive({ items }: Props) {
 
 function TranscriptCard({ item }: { item: TranscriptItem }) {
   return (
-    <article className="grid overflow-hidden rounded-lg border border-black/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-md sm:grid-cols-[9.5rem_minmax(0,1fr)]">
-      <Link
-        href={`/sbobinature/${item.slug}`}
-        className="group relative block h-48 overflow-hidden bg-black/[0.04] sm:h-auto sm:min-h-full"
-        aria-label={`Apri la sbobinatura di ${item.speaker}`}
-      >
-        <TranscriptPreviewPoster item={item} />
-      </Link>
-      <div className="flex min-w-0 flex-col p-5">
-        <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-black/40">
-          <span>{item.readingMinutes} min</span>
-          {item.isNew && (
-            <span className="rounded-full border border-accent/25 bg-accent/[0.06] px-2 py-0.5 text-accent">
-              nuova
-            </span>
-          )}
-        </div>
-        <h3 className="font-display text-xl font-semibold leading-tight tracking-tight text-charcoal">
-          <Link href={`/sbobinature/${item.slug}`} className="hover:text-accent">
-            <span className="text-black/70">{item.speaker}</span>
-            <span className="text-black/30"> - </span>
-            {item.topic}
-          </Link>
-        </h3>
-        {item.summary && (
-          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-black/60">
-            {item.summary}
-          </p>
+    <article className="flex h-full min-w-0 flex-col rounded-lg border border-black/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-md sm:p-6">
+      <div className="mb-3 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-black/40">
+        <span>{item.readingMinutes} min</span>
+        {item.isNew && (
+          <span className="rounded-full border border-accent/25 bg-accent/[0.06] px-2 py-0.5 text-accent">
+            nuova
+          </span>
         )}
-        {item.highlights.length > 0 && (
-          <ul className="mt-4 flex flex-wrap gap-2" aria-label="Temi">
-            {item.highlights.slice(0, 4).map((highlight) => (
-              <li
-                key={highlight}
-                className="rounded-full border border-black/10 bg-[#fbfaf7] px-2.5 py-1 font-mono text-[10px] text-black/55"
-              >
-                {highlight}
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="mt-5 flex flex-wrap items-center gap-3 font-mono text-[11px] text-black/45">
-          <Link
-            href={`/sbobinature/${item.slug}`}
-            className="text-accent hover:underline"
+      </div>
+      <h3 className="font-display text-xl font-semibold leading-tight tracking-tight text-charcoal">
+        <Link href={`/sbobinature/${item.slug}`} className="hover:text-accent">
+          <span className="text-black/70">{item.speaker}</span>
+          <span className="text-black/30"> - </span>
+          {item.topic}
+        </Link>
+      </h3>
+      {item.summary && (
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-black/60">
+          {item.summary}
+        </p>
+      )}
+      {item.highlights.length > 0 && (
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Temi">
+          {item.highlights.slice(0, 4).map((highlight) => (
+            <li
+              key={highlight}
+              className="rounded-full border border-black/10 bg-[#fbfaf7] px-2.5 py-1 font-mono text-[10px] text-black/55"
+            >
+              {highlight}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-auto flex flex-wrap items-center gap-3 pt-5 font-mono text-[11px] text-black/45">
+        <Link
+          href={`/sbobinature/${item.slug}`}
+          className="text-accent hover:underline"
+        >
+          Apri sbobinatura
+        </Link>
+        {item.youtube && (
+          <a
+            href={item.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent hover:underline"
           >
-            Apri sbobinatura
-          </Link>
-          {item.youtube && (
-            <a
-              href={item.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent hover:underline"
-            >
-              YouTube
-            </a>
-          )}
-          {item.spotify && (
-            <a
-              href={item.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent hover:underline"
-            >
-              Spotify
-            </a>
-          )}
-        </div>
+            YouTube
+          </a>
+        )}
+        {item.spotify && (
+          <a
+            href={item.spotify}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent hover:underline"
+          >
+            Spotify
+          </a>
+        )}
       </div>
     </article>
   );
