@@ -37,6 +37,7 @@ const FALLBACK_SUGGESTIONS = [
   "typescript",
   "docker",
   "sbobinature",
+  "archivio",
   "valori",
   "impatto",
   "biblioteca",

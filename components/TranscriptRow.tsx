@@ -29,7 +29,7 @@ export function TranscriptRow({
   const { setUnrolled } = useCommandQuery();
   const visible = match(searchText);
   const anchorId = `sbobinatura-${slug}`;
-  const detailHref = `/?b=${encodeURIComponent(slug)}#${anchorId}`;
+  const detailHref = `/sbobinature/${slug}`;
   if (!visible) return null;
   return (
     <li id={anchorId} className="scroll-mt-28">
@@ -51,7 +51,7 @@ export function TranscriptRow({
           <span className="text-black/30">—</span> {topic}
         </p>
         <span className="mt-0.5 block text-[10px] font-mono text-black/30 transition group-hover:text-accent/80">
-          Apri la scheda con la sbobinatura completa
+          Apri la pagina dedicata con la sbobinatura completa
         </span>
       </Link>
       {(youtube || spotify) && (

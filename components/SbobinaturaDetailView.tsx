@@ -42,11 +42,11 @@ export function SbobinaturaDetailView({
         </h1>
         <p className="mt-4 flex flex-wrap items-center gap-3 text-[12px] font-mono text-black/45">
           <a
-            href={`/?b=${encodeURIComponent(item.slug)}#sbobinatura-${item.slug}`}
+            href={`/sbobinature/${item.slug}`}
             className="text-accent transition hover:underline"
             aria-label={`Link diretto alla sbobinatura di ${item.speaker}`}
           >
-            Link diretto
+            Pagina dedicata
           </a>
           {(item.youtube || item.spotify) && (
             <span className="text-black/20" aria-hidden>

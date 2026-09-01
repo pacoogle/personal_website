@@ -6,6 +6,7 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Suspense, useCallback, useEffect, useMemo, useRef } from "react";
@@ -15,7 +16,6 @@ import {
   SEARCH_HINT_ID,
 } from "@/lib/search-suggestions";
 import { SbobinaturaDetailView } from "@/components/SbobinaturaDetailView";
-import { TranscriptRow } from "@/components/TranscriptRow";
 import {
   CommandQueryProvider,
   useCommandQuery,
@@ -39,17 +39,17 @@ function publicPath(href: string) {
 }
 
 const PLACEHOLDER =
-  "Es. azienda, stack, valori, sbobinature, temi, nomi…";
+  "Es. azienda, stack, valori, temi, nomi…";
 
 /**
- * Esempi cliccabili: sintesi, tre aziende (searchText), sbobinature e valori.
+ * Esempi cliccabili: sintesi, aziende, stack e valori.
  */
 const EXAMPLE_SEARCH_TERMS = [
   "sintesi",
   "gamindo",
   "supermoney",
   "buzzoole",
-  "sbobinature",
+  "typescript",
   "valori",
 ] as const;
 
@@ -87,11 +87,6 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
   const isValidDetail = Boolean(bParam && detail);
   const isInvalidDetail = Boolean(bParam && !detail);
 
-  const transcriptSearchTexts = useMemo(
-    () => transcriptItems.map((t) => t.searchText),
-    [transcriptItems]
-  );
-
   const { query, setQuery, unrolled, setUnrolled } = useCommandQuery();
   const firstScrollDone = useRef(false);
   const reduceMotion = useReducedMotion();
@@ -106,24 +101,14 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
       const anchorId = window.location.hash.slice(1);
       if (!anchorId.startsWith("sbobinatura-")) return;
 
-      setUnrolled(true);
-      setQuery("biblioteca");
-
-      const scrollToAnchor = () => {
-        document.getElementById(anchorId)?.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "start",
-        });
-      };
-
-      setTimeout(scrollToAnchor, 0);
-      setTimeout(scrollToAnchor, 120);
+      const slug = anchorId.replace(/^sbobinatura-/, "");
+      if (slug) router.push(`/sbobinature/${slug}`);
     };
 
     openTranscriptAnchor();
     window.addEventListener("hashchange", openTranscriptAnchor);
     return () => window.removeEventListener("hashchange", openTranscriptAnchor);
-  }, [bParam, reduceMotion, setQuery, setUnrolled]);
+  }, [bParam, router]);
 
   const match = useCallback(
     (hay: string) => visibleWhenQuery(query, hay),
@@ -132,7 +117,6 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
 
   const execVisible = match(executive.searchText);
   const anyWorkVisible = work.some((w) => match(w.searchText));
-  const anyTranscriptVisible = transcriptSearchTexts.some((s) => match(s));
   const humanVisible = match(humanSearchText);
 
   const sectionIds = useMemo(() => {
@@ -142,9 +126,8 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
       if (match(w.searchText)) ids.push(`job-${w.id}`);
     });
     if (humanVisible) ids.push("human");
-    if (anyTranscriptVisible) ids.push("library");
     return ids;
-  }, [execVisible, anyTranscriptVisible, humanVisible, match]);
+  }, [execVisible, humanVisible, match]);
 
   useEffect(() => {
     if (bParam) {
@@ -218,18 +201,8 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
   }, [clearUrlDetail, setUnrolled]);
 
   const handleBackFromSbobinatura = useCallback(() => {
-    router.replace(pathname || "/");
-    setUnrolled(true);
-    setQuery("biblioteca");
-    setTimeout(() => {
-      requestAnimationFrame(() => {
-        document.getElementById("library")?.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "start",
-        });
-      });
-    }, 80);
-  }, [router, pathname, setUnrolled, setQuery, reduceMotion]);
+    router.push("/sbobinature");
+  }, [router]);
 
   useEffect(() => {
     if (!unrolled) return;
@@ -272,16 +245,12 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
   const hasLibrary = transcriptItems.length > 0;
 
   const goToSection = useCallback(
-    (id: "executive" | "work" | "library" | "human") => {
+    (id: "executive" | "work" | "human") => {
       if (bParam) {
         router.replace(pathname || "/");
       }
       setUnrolled(true);
-      if (id === "library") {
-        setQuery("biblioteca");
-      } else {
-        setQuery("");
-      }
+      setQuery("");
       const runScroll = () => {
         document.getElementById(id)?.scrollIntoView({
           behavior: reduceMotion ? "auto" : "smooth",
@@ -311,7 +280,6 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
     !sudoActive &&
     !execVisible &&
     !anyWorkVisible &&
-    !anyTranscriptVisible &&
     !humanVisible;
 
   const corpusTokens = useMemo(
@@ -398,8 +366,8 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
             }
           >
             {unrolled
-              ? "Una parola o una frase: restano le sezioni in cui quel testo compare (sintesi, lavori, valori, sbobinature). Invio mostra sotto l’esplorazione."
-              : "Cerca in sintesi, percorso lavorativo, valori o biblioteca: basta una parola, o ad es. un ruolo, un’azienda, uno stack, un tema o un nome. Invio apre l’esplorazione sotto la barra."}
+              ? "Una parola o una frase: restano le sezioni in cui quel testo compare (sintesi, lavori, valori). Invio mostra sotto l’esplorazione."
+              : "Cerca in sintesi, percorso lavorativo o valori: basta una parola, o ad es. un ruolo, un’azienda, uno stack, un tema o un nome. Invio apre l’esplorazione sotto la barra."}
           </p>
           <SearchTermChips
             terms={EXAMPLE_SEARCH_TERMS}
@@ -435,29 +403,16 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
                 ·
               </span>
               <NavPill onClick={() => goToSection("human")} label="Valori" />
-              {hasLibrary && (
-                <>
-                  <span className="text-black/20" aria-hidden>
-                    ·
-                  </span>
-                  <NavPill
-                    onClick={() => goToSection("library")}
-                    label="Sbobinature"
-                    highlight
-                  />
-                </>
-              )}
             </nav>
           )}
           {!unrolled && hasLibrary && (
-            <p className="mt-5 text-center">
-              <button
-                type="button"
-                onClick={() => goToSection("library")}
-                className="font-mono text-[12px] text-accent/90 underline decoration-accent/30 underline-offset-4 transition hover:text-accent hover:decoration-accent/60"
+            <p className="mt-5 text-center font-mono text-[12px]">
+              <Link
+                href="/sbobinature"
+                className="text-accent/90 underline decoration-accent/30 underline-offset-4 transition hover:text-accent hover:decoration-accent/60"
               >
-                La biblioteca · Sbobinature
-              </button>
+                Sbobinature
+              </Link>
             </p>
           )}
         </div>
@@ -636,69 +591,6 @@ function HumanCommandLineView({ transcriptItems }: ShellProps) {
               </motion.section>
             )}
             </motion.main>
-
-            {anyTranscriptVisible && (
-              <motion.section
-                id="library"
-                aria-labelledby="library-heading"
-                variants={itemVariants}
-                className="scroll-mt-24 border-t border-black/8 bg-gradient-to-b from-black/[0.02] to-black/[0.04] py-20"
-              >
-                <div className="mx-auto max-w-2xl px-5">
-                  <h2
-                    id="library-heading"
-                    className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-black/40"
-                  >
-                    La biblioteca · Sbobinature
-                  </h2>
-                  <p className="mb-3 max-w-prose text-sm leading-relaxed text-black/60">
-                    Questo spazio raccoglie ciò che «sbobino» per rimetterlo alla
-                    community <strong className="font-medium text-charcoal">in
-                    modo gratuito</strong>: ogni scheda parte da un video{" "}
-                    <strong className="font-medium text-charcoal">YouTube</strong>{" "}
-                    o un episodio{" "}
-                    <strong className="font-medium text-charcoal">Spotify</strong>
-                    , poi con un <strong className="font-medium text-charcoal">
-                    agente AI</strong> lavoro trascrizioni, testo pulito, highlight
-                    e note — per restituire in chiaro e riusabile le sessioni che
-                    seguo.
-                  </p>
-                  <p className="mb-3 max-w-prose text-sm leading-relaxed text-black/50">
-                    <strong className="font-bold text-black/60">Clicca</strong>{" "}
-                    su un titolo per aprire la <strong className="font-medium text-black/60">scheda
-                    con la sbobinatura intera</strong>. Sotto ogni riga, link diretti a YouTube o Spotify. Dalla
-                    barra, <span className="text-black/60">Vai a → Sbobinature</span> o
-                    cerca <span className="font-mono text-black/55">biblioteca
-                    </span> / <span className="font-mono text-black/55">sbobinature</span>.
-                  </p>
-                  <p className="mb-2 max-w-prose text-sm leading-relaxed text-black/50">
-                    <strong className="font-bold text-black/60">Newsletter</strong>:{" "}
-                    inserisci l&apos;email nel modulo qui sotto: un avviso quando esce una
-                    nuova sbobinatura, niente spam (disiscrizione dal link in calce alle
-                    email). Il servizio iscrizioni è gestito da Buttondown.
-                  </p>
-                  <NewsletterSignup
-                    formIdSuffix="library"
-                    variant="footer"
-                    className="mb-10"
-                  />
-                  <ul className="flex flex-col gap-10">
-                    {transcriptItems.map((t) => (
-                      <TranscriptRow
-                        key={t.slug}
-                        slug={t.slug}
-                        speaker={t.speaker}
-                        topic={t.topic}
-                        searchText={t.searchText}
-                        isNew={t.isNew}
-                        youtube={t.youtube}
-                        spotify={t.spotify}
-                      />
-                    ))}
-                  </ul>
-                </div>
-              </motion.section>
-            )}
 
             <motion.footer
               className="mx-auto max-w-2xl border-t border-black/6 px-5 pt-6 pb-8"
